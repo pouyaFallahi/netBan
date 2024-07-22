@@ -1,5 +1,3 @@
-import json
-from django.shortcuts import render
 from .models import Book, Rating
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
@@ -11,7 +9,7 @@ class RatingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rating
-        fields = ['user                 ', 'score']
+        fields = ['book', 'score', 'user']
         read_only_fields = ('user',)
 
     def validate_score(self, value):
@@ -31,4 +29,4 @@ class BookSerializer(serializers.ModelSerializer):
 class BookFilterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['id', 'title', 'author', 'genre']
+        fields = '__all__'
