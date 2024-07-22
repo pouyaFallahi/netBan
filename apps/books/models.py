@@ -16,7 +16,7 @@ class Book(models.Model):
     genre = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.pk} - {self.title} - {self.author}"
+        return f"{self.id} -{self.title} - {self.author}"
 
 
 class Rating(models.Model):
