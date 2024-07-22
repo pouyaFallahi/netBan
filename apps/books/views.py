@@ -3,7 +3,7 @@ from .filters import BookFilter
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.views import APIView
-from .book_suggestion import Recommender
+from .book_suggestion import ContentBasedRecommender
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -51,14 +51,15 @@ class BookFilterList(viewsets.ModelViewSet):
 
 class RecommendBookView(APIView):
     permission_classes = [IsAuthenticated]
+
     def __init__(self, **kwargs):
-        self.recommender = Recommender()
-        self.recommender.fit()
+        self.recommender = ContentBasedRecommender()
         super().__init__(**kwargs)
 
     def get(self, request, *args, **kwargs):
         user_id = request.user.id
-        recommended_books_ids = self.recommender.recommend(user_id)
-        recommended_books = Book.objects.filter(id__in=recommended_books_ids)
+        self.recommender.fit()
+        recommended_books = self.recommender.recommend(user_id=user_id)
         serializer = BookSerializer(recommended_books, many=True)
         return Response(serializer.data)
+
