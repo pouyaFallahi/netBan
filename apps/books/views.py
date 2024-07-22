@@ -22,6 +22,7 @@ class RatingViewSet(viewsets.ModelViewSet):
     serializer_class = RatingSerializer
     permission_classes = [IsAuthenticated]
 
+
     def perform_create(self, serializer):
         book_id = self.request.data.get('book')
         user = self.request.user
@@ -39,6 +40,13 @@ class RatingViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Rating.objects.filter(user=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.user != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class BookFilterList(viewsets.ModelViewSet):

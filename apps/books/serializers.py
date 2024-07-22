@@ -13,7 +13,7 @@ class RatingSerializer(serializers.ModelSerializer):
         read_only_fields = ('user',)
 
     def validate_score(self, value):
-        if value < 0 or value > 5:
+        if value <=  0 or value > 5:
             raise serializers.ValidationError(_('Score must be between 0 and 5.'))
         return value
 
